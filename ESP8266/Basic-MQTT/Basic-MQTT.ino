@@ -23,18 +23,21 @@ char charBuf[50];
  
 const int actuator1Pin = 2;
 
-const char* ssid = "YourSSID";
-const char* password = "YourWiFiPassword";
+const char* ssid = "vmt";
+const char* password = "Mmk123456";
 
-const char* mqtt_server = "iot.techbubbletechnologies.com";
+//const char* mqtt_server = "iot.techbubbletechnologies.com";
+const char* mqtt_server = "iot.eclipse.org";
 int  mqttPort = 8883;
 
 String locationID = "YourLocationID";
 String zoneID = "YourZoneID";
 String deviceID = "YourDeviceID";
 char deviceName[] = "YourDeviceName"; 
-char mqttUsername[]   = "YourDeviceMQTTUsername"; 
-char mqttPassword[]  = "YourDeviceMQTTPassword"; 
+//char mqttUsername[]   = "YourDeviceMQTTUsername"; 
+//char mqttPassword[]  = "YourDeviceMQTTPassword"; 
+char mqttUsername[]   = ""; 
+char mqttPassword[]  = ""; 
 
 long lastMsg = 0;
 char msg[50];
@@ -111,13 +114,14 @@ void publishToDeviceWarnings(const char* data){
 
 void reconnect() {
   while (!client.connected()) {
-    Serial.println("Attempting connection to TechBubble IoT JumpWay...");
-    if (client.connect(deviceName, mqttUsername, mqttPassword)) {
+    Serial.println("Attempting connection to Server...");
+    //if (client.connect(deviceName, mqttUsername, mqttPassword)) {
+    if (client.connect(deviceName)) {
       Serial.println("Connected to TechBubble IoT JumpWay!");
       publishToDeviceStatus("ONLINE");
       subscribeToDeviceCommands();
     } else {
-      Serial.print("Failed to connect to TechBubble IoT JumpWay, rc=");
+      Serial.print("Failed to connect to Server, rc=");
       Serial.print(client.state());
       Serial.println("... trying again in 5 seconds");
       delay(5000);
@@ -141,5 +145,7 @@ void loop() {
   long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
+    publishToDeviceStatus("ONLINE");
+    Serial.println("publishToDeviceStatus(\"ONLINE\")");
   }
 }
